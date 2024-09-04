@@ -27,6 +27,8 @@ def get_action_from_url(url):
         return 'Public API Call'
     elif 'ces/v1' in url:
         return 'CES API Call'
+    elif url.endswith('.js'):
+        return 'JavaScript File Request'
     elif url.endswith('favicon.ico'):
         return 'Favicon Request'
     elif url == 'https://chatgpt.com/':
