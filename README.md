@@ -28,7 +28,7 @@ This project is a Chrome extension and Flask-based server designed to monitor an
 2. Create a virtual environment and activate it:
     ```bash
     python3 -m venv venv
-    source venv/bin/activate
+    venv\Scripts\activate
     ```
 3. Install the required Python packages:
     ```bash
