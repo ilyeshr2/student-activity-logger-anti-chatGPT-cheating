@@ -27,11 +27,12 @@ def get_action_from_url(url):
         return 'Public API Call'
     elif 'ces/v1' in url:
         return 'CES API Call'
-    elif 'favicon.ico' in url:
+    elif url.endswith('favicon.ico'):
         return 'Favicon Request'
-    elif any(x in url for x in ['page', 'c/', 'dashboard']):
+    elif url == 'https://chatgpt.com/':
         return 'Page Visit'
     return 'Unknown Action'
+
 
 # Route to log activity
 @app.route('/api/log', methods=['POST'])
@@ -41,9 +42,9 @@ def log_activity():
 
     if not data or 'timestamp' not in data or 'url' not in data:
         return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
-     
+
     action = get_action_from_url(data['url'])
-    
+
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -52,8 +53,9 @@ def log_activity():
     ''', (data['timestamp'], data['url'], action))
     conn.commit()
     conn.close()
-    
+
     return jsonify({'status': 'success'})
+
 
 
 # Route to view logs
