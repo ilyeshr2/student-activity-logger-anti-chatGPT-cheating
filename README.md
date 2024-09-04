@@ -23,7 +23,7 @@ This project is a Chrome extension and Flask-based server designed to monitor an
 ### Flask Server
 1. Navigate to the server directory:
     ```bash
-    cd server/
+    cd flaskserver/
     ```
 2. Create a virtual environment and activate it:
     ```bash
@@ -57,7 +57,7 @@ Once the Chrome extension is installed and the Flask server is running, the exte
 Contributions are welcome! Please fork the repository and submit a pull request with your improvements or bug fixes.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 - **Flask**: [Flask Documentation](https://flask.palletsprojects.com/)
