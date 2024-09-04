@@ -13,7 +13,7 @@ This project is a Chrome extension and Flask-based server designed to monitor an
 ### Chrome Extension
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/student-activity-logger.git
+    git clone https://github.com/ilyeshr2/student-activity-logger-anti-chatGPT-cheating.git
     ```
 2. Navigate to `chrome-extension/` and load the extension:
     - Open Chrome and go to `chrome://extensions/`.
