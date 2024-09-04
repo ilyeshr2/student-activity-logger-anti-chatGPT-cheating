@@ -21,18 +21,18 @@ This project is a Chrome extension and Flask-based server designed to monitor an
     - Click "Load unpacked" and select the `chrome-extension/` directory.
 
 ### Flask Server
-1. Navigate to the server directory:
-    ```bash
-    cd flaskserver/
-    ```
-2. Create a virtual environment and activate it:
+1. Create a virtual environment and activate it:
     ```bash
     python3 -m venv venv
     venv\Scripts\activate
     ```
-3. Install the required Python packages:
+2. Install the required Python packages:
     ```bash
     pip install -r requirements.txt
+    ```
+3. Navigate to the server directory:
+    ```bash
+    cd flaskserver/
     ```
 4. Run the Flask server:
     ```bash
