@@ -1,4 +1,3 @@
-// Event listener for web requests
 chrome.webRequest.onCompleted.addListener(
     function(details) {
         const logData = {
@@ -7,7 +6,7 @@ chrome.webRequest.onCompleted.addListener(
             method: details.method || 'UNKNOWN'
         };
 
-        console.log('Sending log data:', logData);  // Debugging statement
+        console.log('Sending log data:', logData);  
 
         fetch('http://localhost:5000/api/log', {
             method: 'POST',
@@ -17,11 +16,11 @@ chrome.webRequest.onCompleted.addListener(
             body: JSON.stringify(logData)
         }).catch(error => console.error('Error sending log:', error));
     },
-    {urls: ["*://chatgpt.com/*"]}  // Ensure this matches the URL you want to monitor
+    {urls: ["*://chatgpt.com/*"]}  
 );
 
 
-// Optionally, log page visits
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status == 'complete') {
         const logData = {
@@ -30,7 +29,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             action: "Page Visit"
         };
 
-        // Send log to server
+        
         fetch('http://localhost:5000/api/log', {
             method: 'POST',
             headers: {
