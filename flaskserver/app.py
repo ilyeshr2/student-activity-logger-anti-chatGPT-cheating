@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 CORS(app)
 
-# Initialize the database
+
 def init_db():
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
@@ -34,11 +34,11 @@ def get_action_from_url(url):
     return 'Unknown Action'
 
 
-# Route to log activity
+
 @app.route('/api/log', methods=['POST'])
 def log_activity():
     data = request.json
-    print(f"Received data: {data}")  # Debugging statement
+    print(f"Received data: {data}")  
 
     if not data or 'timestamp' not in data or 'url' not in data:
         return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
@@ -58,7 +58,7 @@ def log_activity():
 
 
 
-# Route to view logs
+
 @app.route('/view_logs')
 def view_logs():
     conn = sqlite3.connect('activity_logs.db')
