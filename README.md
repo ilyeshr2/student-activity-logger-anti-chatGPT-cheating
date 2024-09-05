@@ -1,9 +1,10 @@
 # Student Activity Logger
 
-This project is a Chrome extension and Flask-based server designed to monitor and log students' web activity, particularly focusing on detecting usage of ChatGPT during exams. It captures web requests made to specific URLs and stores this activity in a local database for review.
+This project is a Chrome extension and Flask-based server designed to monitor and log students' web activity, particularly focusing on detecting usage of ChatGPT during exams. It captures web requests made to specific URLs, stores the student's name along with their activity in a local database for review, and keeps the logging discreet.
 
 ## Features
 - **Real-time Monitoring**: Captures and logs web requests made to ChatGPT-related URLs.
+- **Student Identification**: Logs the student's name (stored in the browser's local storage) along with their activity.
 - **Server-Side Logging**: Logs data to a Flask server with an SQLite database for easy retrieval and analysis.
 - **Action Identification**: Categorizes different types of actions based on the URL accessed.
 - **Page Visit Logging**: Records when a student visits a page, adding an extra layer of monitoring.
@@ -19,6 +20,11 @@ This project is a Chrome extension and Flask-based server designed to monitor an
     - Open Chrome and go to `chrome://extensions/`.
     - Enable "Developer mode" in the top right corner.
     - Click "Load unpacked" and select the `chrome-extension/` directory.
+
+3. VERY IMPORTANT:
+    - When you install the extension on a student's browser, 
+    you will navigate to the extension options page by right-clicking on the extension icon in the Chrome toolbar and selecting "Options."
+    - You will manually enter the student's name in the field and save it. After saving, the extension will automatically include the student's name with each log sent to the server.
 
 ### Flask Server
 1. Create a virtual environment and activate it:
