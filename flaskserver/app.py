@@ -12,6 +12,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_name TEXT NOT NULL,
             timestamp TEXT NOT NULL,
             url TEXT NOT NULL,
             action TEXT
@@ -19,6 +20,7 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
+
 
 def get_action_from_url(url):
     if 'backend-api' in url:
@@ -40,19 +42,22 @@ def get_action_from_url(url):
 @app.route('/api/log', methods=['POST'])
 def log_activity():
     data = request.json
-    print(f"Received data: {data}")  
+    print(f"Received data: {data}")  # Debugging statement
 
-    if not data or 'timestamp' not in data or 'url' not in data:
+    # Ensure all required data is present
+    if not data or 'timestamp' not in data or 'url' not in data or 'studentName' not in data:
         return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
 
     action = get_action_from_url(data['url'])
+    student_name = data['studentName']
 
+    # Insert the log into the database
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO logs (timestamp, url, action)
-        VALUES (?, ?, ?)
-    ''', (data['timestamp'], data['url'], action))
+        INSERT INTO logs (student_name, timestamp, url, action)
+        VALUES (?, ?, ?, ?)
+    ''', (student_name, data['timestamp'], data['url'], action))
     conn.commit()
     conn.close()
 
@@ -65,10 +70,22 @@ def log_activity():
 def view_logs():
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM logs')
+    cursor.execute('SELECT student_name, timestamp, url, action FROM logs')
     logs = cursor.fetchall()
     conn.close()
-    return jsonify(logs)
+
+    # Optionally format the logs for display
+    log_list = []
+    for log in logs:
+        log_list.append({
+            'student_name': log[0],
+            'timestamp': log[1],
+            'url': log[2],
+            'action': log[3]
+        })
+
+    return jsonify(log_list)
+
 
 if __name__ == '__main__':
     init_db()  

@@ -1,22 +1,26 @@
 chrome.webRequest.onCompleted.addListener(
     function(details) {
-        const logData = {
-            url: details.url,
-            timestamp: new Date().toISOString(),
-            method: details.method || 'UNKNOWN'
-        };
+        // Fetch the student name from local storage
+        chrome.storage.local.get('studentName', function(data) {
+            const logData = {
+                studentName: data.studentName || 'Unknown',
+                url: details.url,
+                timestamp: new Date().toISOString(),
+                method: details.method || 'UNKNOWN'
+            };
 
-        console.log('Sending log data:', logData);  
+            console.log('Sending log data:', logData);
 
-        fetch('http://localhost:5000/api/log', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(logData)
-        }).catch(error => console.error('Error sending log:', error));
+            fetch('http://localhost:5000/api/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(logData)
+            }).catch(error => console.error('Error sending log:', error));
+        });
     },
-    {urls: ["*://chatgpt.com/*"]}  
+    {urls: ["*://chatgpt.com/*"]}
 );
 
 
