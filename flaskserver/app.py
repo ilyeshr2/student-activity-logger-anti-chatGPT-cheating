@@ -97,7 +97,8 @@ def log_activity():
 
     action = get_action_from_url(data['url'])
     student_name = data['studentName']
-    message = fetch_message_from_url(data['url'])  # Fetch message from the URL
+    message = data['userMessages'][0]  # Fetch message from the URL
+    print(f"Message from URL: {message}")
 
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
