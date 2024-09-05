@@ -21,7 +21,7 @@ This project is a Chrome extension and Flask-based server designed to monitor an
     - Enable "Developer mode" in the top right corner.
     - Click "Load unpacked" and select the `chrome-extension/` directory.
 
-3. VERY IMPORTANT:
+3. Configure the Extension: VERY IMPORTANT:
     - When you install the extension on a student's browser, 
     you will navigate to the extension options page by right-clicking on the extension icon in the Chrome toolbar and selecting "Options."
     - You will manually enter the student's name in the field and save it. After saving, the extension will automatically include the student's name with each log sent to the server.
@@ -50,6 +50,10 @@ This project is a Chrome extension and Flask-based server designed to monitor an
 Once the Chrome extension is installed and the Flask server is running, the extension will start logging web activity related to ChatGPT. You can view logged data by navigating to:
 
 `http://localhost:5000/view_logs`
+
+or you can use the admine dashboard at:
+
+`http://localhost:5000/admin`
 
 ## Configuration
 - **Monitoring URLs**: By default, the extension monitors `https://chatgpt.com/`. You can customize this URL in the `background.js` file under the `urls` array.
