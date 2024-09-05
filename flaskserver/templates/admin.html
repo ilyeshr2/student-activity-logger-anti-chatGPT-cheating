@@ -45,6 +45,7 @@
                 <th>Timestamp</th>
                 <th>URL</th>
                 <th>Action</th>
+                <th>Message</th> <!-- New column -->
             </tr>
         </thead>
         <tbody></tbody>
@@ -69,12 +70,12 @@
                     // Populate the logs table
                     data.logs.forEach(log => {
                         const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${log.student_name}</td>
-                            <td>${log.timestamp}</td>
-                            <td>${log.url}</td>
-                            <td>${log.action}</td>
-                        `;
+                        row.innerHTML = 
+                            `<td>${log.student_name}</td>
+                             <td>${log.timestamp}</td>
+                             <td>${log.url}</td>
+                             <td>${log.action}</td>
+                             <td>${log.message || 'N/A'}</td>`; // Show message if available
                         tableBody.appendChild(row);
                     });
                 })
