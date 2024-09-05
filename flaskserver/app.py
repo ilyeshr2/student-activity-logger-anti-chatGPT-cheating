@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
+from flask import render_template
 
 app = Flask(__name__)
 CORS(app)
@@ -38,20 +39,53 @@ def get_action_from_url(url):
     return 'Unknown Action'
 
 
+@app.route('/admin')
+def admin_page():
+    return render_template('admin.html')
+
+# Route to get logs and request count for a specific student
+@app.route('/api/logs/<student_name>', methods=['GET'])
+def get_logs_by_student(student_name):
+    conn = sqlite3.connect('activity_logs.db')
+    cursor = conn.cursor()
+
+    # Get the logs for the student
+    cursor.execute('SELECT * FROM logs WHERE student_name = ?', (student_name,))
+    logs = cursor.fetchall()
+
+    # Get the count of requests for the student
+    cursor.execute('SELECT COUNT(*) FROM logs WHERE student_name = ?', (student_name,))
+    request_count = cursor.fetchone()[0]
+    
+    conn.close()
+
+    # Format the logs for display
+    log_list = []
+    for log in logs:
+        log_list.append({
+            'student_name': log[1],
+            'timestamp': log[2],
+            'url': log[3],
+            'action': log[4]
+        })
+
+    return jsonify({
+        'logs': log_list,
+        'request_count': request_count
+    })
+
 
 @app.route('/api/log', methods=['POST'])
 def log_activity():
     data = request.json
-    print(f"Received data: {data}")  # Debugging statement
+    print(f"Received data: {data}")  
 
-    # Ensure all required data is present
     if not data or 'timestamp' not in data or 'url' not in data or 'studentName' not in data:
         return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
 
     action = get_action_from_url(data['url'])
     student_name = data['studentName']
 
-    # Insert the log into the database
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -74,7 +108,6 @@ def view_logs():
     logs = cursor.fetchall()
     conn.close()
 
-    # Optionally format the logs for display
     log_list = []
     for log in logs:
         log_list.append({
