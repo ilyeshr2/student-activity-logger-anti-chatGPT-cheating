@@ -45,7 +45,7 @@
                 <th>Timestamp</th>
                 <th>URL</th>
                 <th>Action</th>
-                <th>Message</th> <!-- New column -->
+                <th>Message</th> 
             </tr>
         </thead>
         <tbody></tbody>
@@ -62,12 +62,12 @@
                     const tableBody = document.getElementById('logs-table').querySelector('tbody');
                     const requestCount = document.getElementById('request-count');
                     
-                    tableBody.innerHTML = ''; // Clear existing data
+                    tableBody.innerHTML = ''; 
 
-                    // Display the request count
+                    
                     requestCount.textContent = `Total Requests: ${data.request_count}`;
 
-                    // Populate the logs table
+                    
                     data.logs.forEach(log => {
                         const row = document.createElement('tr');
                         row.innerHTML = 
@@ -75,7 +75,7 @@
                              <td>${log.timestamp}</td>
                              <td>${log.url}</td>
                              <td>${log.action}</td>
-                             <td>${log.message || 'N/A'}</td>`; // Show message if available
+                             <td>${log.message || 'N/A'}</td>`; 
                         tableBody.appendChild(row);
                     });
                 })

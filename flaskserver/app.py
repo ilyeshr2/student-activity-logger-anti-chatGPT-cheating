@@ -37,7 +37,9 @@ def get_action_from_url(url):
         return 'Page Visit'
     return 'Unknown Action'
 
-def fetch_message_from_url(url):
+#-----------------this function is not working, i will test it later and leave it for now-----------------
+
+def fetch_message_from_url(url): #im note sure if this function is working, psk message rani njibah directement mn /api/log b had line: message = data['userMessages'][0]
     if 'conversation' not in url:
         return None
 
