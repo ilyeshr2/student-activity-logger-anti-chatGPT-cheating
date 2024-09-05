@@ -1,6 +1,6 @@
 chrome.webRequest.onBeforeRequest.addListener(
     function(details) {
-        // Check if the request URL matches the desired endpoint
+        // Check if the request URL matches the desired endpoint and method
         if (details.url === 'https://chatgpt.com/backend-api/conversation' && details.method === 'POST') {
             // Capture and parse the payload
             const requestBody = details.requestBody;
@@ -9,25 +9,33 @@ chrome.webRequest.onBeforeRequest.addListener(
                 try {
                     const payload = JSON.parse(rawData);
                     console.log('Captured Payload:', payload);
+                    
                     // Extract the message if it exists
                     if (payload.messages && payload.messages.length > 0) {
-                        const userMessages = payload.messages.filter(msg => msg.author.role === 'user').map(msg => msg.content.parts[0]);
+                        const userMessages = payload.messages
+                            .filter(msg => msg.author.role === 'user')
+                            .map(msg => msg.content.parts[0]);
                         console.log('User Messages:', userMessages);
-                        
-                        // Send the data to the server
-                        fetch('http://localhost:5000/api/log', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                studentName: 'ishak',  // You might want to replace this with dynamic data
-                                url: details.url,
-                                timestamp: new Date().toISOString(),
-                                method: details.method,
-                                userMessages: userMessages
-                            })
-                        }).catch(error => console.error('Error sending log:', error));
+
+                        // Fetch the student name from local storage
+                        chrome.storage.local.get('studentName', function(data) {
+                            const studentName = data.studentName || 'Unknown';
+
+                            // Send the data to the server
+                            fetch('http://localhost:5000/api/log', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    studentName: studentName,  // Use dynamic student name
+                                    url: details.url,
+                                    timestamp: new Date().toISOString(),
+                                    method: details.method,
+                                    userMessages: userMessages
+                                })
+                            }).catch(error => console.error('Error sending log:', error));
+                        });
                     }
                 } catch (e) {
                     console.error('Error parsing payload:', e);
