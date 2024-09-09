@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import sqlite3
-import requests
 
 app = Flask(__name__)
 CORS(app)
 
+# Initialize the database
 def init_db():
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
@@ -22,6 +22,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Function to determine the action type based on the URL
 def get_action_from_url(url):
     if 'backend-api' in url:
         return 'Backend API Call'
@@ -37,35 +38,17 @@ def get_action_from_url(url):
         return 'Page Visit'
     return 'Unknown Action'
 
-#-----------------this function is not working, i will test it later and leave it for now-----------------#
-
-def fetch_message_from_url(url): #we are getting the message directly from /api/log with: message = data['userMessages'][0]
-    if 'conversation' not in url:
-        return None
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
-        if "messages" in data:
-            messages = data["messages"]
-            for message in messages:
-                if message["author"]["role"] == "user":
-                    return message["content"]["parts"][0]  # Return the user message
-    except requests.RequestException as e:
-        print(f"Request failed: {e}")
-    return None
-
-
 @app.route('/admin')
 def admin_page():
     return render_template('admin.html')
 
+# API to fetch logs for a specific student
 @app.route('/api/logs/<student_name>', methods=['GET'])
 def get_logs_by_student(student_name):
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
 
+    # Fetch all logs and the request count for the given student
     cursor.execute('SELECT * FROM logs WHERE student_name = ?', (student_name,))
     logs = cursor.fetchall()
 
@@ -81,28 +64,22 @@ def get_logs_by_student(student_name):
             'timestamp': log[2],
             'url': log[3],
             'action': log[4],
-            'message': log[5]  # Include the message
+            'message': log[5]
         })
 
-    return jsonify({
-        'logs': log_list,
-        'request_count': request_count
-    })
+    return jsonify({'logs': log_list, 'request_count': request_count})
 
+# API to log activity from the Chrome extension
 @app.route('/api/log', methods=['POST'])
 def log_activity():
     data = request.json
-    print(f"Received data: {data}")
+    student_name = data.get('studentName', 'Unknown')
+    timestamp = data.get('timestamp')
+    url = data.get('url')
+    action = get_action_from_url(url)
+    message = ', '.join(data.get('userMessages', []))
 
-    if not data or 'timestamp' not in data or 'url' not in data or 'studentName' not in data:
-        return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
-
-    action = get_action_from_url(data['url'])
-    student_name = data['studentName']
-    timestamp = data['timestamp']
-    url= data['url']
-    message = data['userMessages'][0]  # Fetch message from the URL
-
+    # Store the log in the SQLite database
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -112,16 +89,7 @@ def log_activity():
     conn.commit()
     conn.close()
 
-    return jsonify({'status': 'success'})
-
-@app.route('/view_logs')
-def view_logs():
-    conn = sqlite3.connect('activity_logs.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM logs')
-    logs = cursor.fetchall()
-    conn.close()
-    return jsonify(logs)
+    return jsonify({'status': 'success'}), 200
 
 if __name__ == '__main__':
     init_db()

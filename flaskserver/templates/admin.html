@@ -45,7 +45,7 @@
                 <th>Timestamp</th>
                 <th>URL</th>
                 <th>Action</th>
-                <th>Message</th> 
+                <th>Message</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -56,18 +56,18 @@
             event.preventDefault();
             const studentName = document.getElementById('student-name').value;
 
+            // Fetch the logs for the entered student name
             fetch(`/api/logs/${encodeURIComponent(studentName)}`)
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.getElementById('logs-table').querySelector('tbody');
                     const requestCount = document.getElementById('request-count');
                     
-                    tableBody.innerHTML = ''; 
-
+                    tableBody.innerHTML = '';  // Clear previous entries
                     
                     requestCount.textContent = `Total Requests: ${data.request_count}`;
 
-                    
+                    // Populate the table with the logs
                     data.logs.forEach(log => {
                         const row = document.createElement('tr');
                         row.innerHTML = 
@@ -75,7 +75,7 @@
                              <td>${log.timestamp}</td>
                              <td>${log.url}</td>
                              <td>${log.action}</td>
-                             <td>${log.message || 'N/A'}</td>`; 
+                             <td>${log.message || 'N/A'}</td>`;
                         tableBody.appendChild(row);
                     });
                 })
