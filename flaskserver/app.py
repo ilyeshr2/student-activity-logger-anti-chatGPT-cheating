@@ -37,9 +37,9 @@ def get_action_from_url(url):
         return 'Page Visit'
     return 'Unknown Action'
 
-#-----------------this function is not working, i will test it later and leave it for now-----------------
+#-----------------this function is not working, i will test it later and leave it for now-----------------#
 
-def fetch_message_from_url(url): #im note sure if this function is working, psk message rani njibah directement mn /api/log b had line: message = data['userMessages'][0]
+def fetch_message_from_url(url): #we are getting the message directly from /api/log with: message = data['userMessages'][0]
     if 'conversation' not in url:
         return None
 
@@ -99,15 +99,16 @@ def log_activity():
 
     action = get_action_from_url(data['url'])
     student_name = data['studentName']
+    timestamp = data['timestamp']
+    url= data['url']
     message = data['userMessages'][0]  # Fetch message from the URL
-    print(f"Message from URL: {message}")
 
     conn = sqlite3.connect('activity_logs.db')
     cursor = conn.cursor()
     cursor.execute('''
         INSERT INTO logs (student_name, timestamp, url, action, message)
         VALUES (?, ?, ?, ?, ?)
-    ''', (student_name, data['timestamp'], data['url'], action, message))
+    ''', (student_name, timestamp, url, action, message))
     conn.commit()
     conn.close()
 

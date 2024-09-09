@@ -1,5 +1,6 @@
 chrome.webRequest.onBeforeRequest.addListener(
     function(details) {
+        console.log('detqils:', details);
         // Check if the request URL matches the desired endpoint psk rqnq bqghyin ghir http request ta3 les messages, ki nerslou message
         if (details.url === 'https://chatgpt.com/backend-api/conversation' && details.method === 'POST') {
             // Capture and parse the payload, message nl9ouh f payload ta3 http request (look at the payload.json tfham) 
